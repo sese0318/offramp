@@ -1,0 +1,21 @@
+{
+  "name": "offramp",
+  "version": "1.0.0",
+  "description": "A bedtime agent that uses your cultural taste (Qloo) and NVIDIA Nemotron on Nebius Token Factory to walk you from the feed to sleep.",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "smoke": "node scripts/smoke.js",
+    "check-keys": "node scripts/check-keys.js",
+    "record": "node scripts/record-snapshots.js",
+    "bench": "node scripts/bench.js",
+    "check-live": "node scripts/check-live.js",
+    "shot": "node scripts/shot.js"
+  }
+}

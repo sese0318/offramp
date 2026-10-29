@@ -1,0 +1,38 @@
+[
+  {
+    "id": "one-more-episode",
+    "label": "One more episode",
+    "who": "Nursing student, early clinicals, falls asleep at 2 after Breaking Bad",
+    "input": {
+      "favorites": ["Spirited Away", "Phoebe Bridgers", "Serial", "The Great British Bake Off"],
+      "traps": ["Breaking Bad", "YouTube video essays"],
+      "sleepBy": "00:30",
+      "windDownMinutes": 90,
+      "notes": "I share a dorm room so I use earbuds. I keep telling myself one more episode."
+    }
+  },
+  {
+    "id": "doomscroll-playlist",
+    "label": "Scroll, then playlist",
+    "who": "Line cook, home at 11 after a late shift, wired and scrolling",
+    "input": {
+      "favorites": ["Radiohead", "Parks and Recreation", "Hidden Brain", "Piranesi"],
+      "traps": ["Stranger Things", "TikTok"],
+      "sleepBy": "01:00",
+      "windDownMinutes": 60,
+      "notes": "I need some sound to fall asleep. Silence makes my brain loud."
+    }
+  },
+  {
+    "id": "one-more-boss",
+    "label": "One more boss",
+    "who": "Grad student who games to decompress and loses track of time",
+    "input": {
+      "favorites": ["Joe Hisaishi", "Stardew Valley", "The Hobbit", "My Neighbor Totoro"],
+      "traps": ["Elden Ring", "Crime Junkie"],
+      "sleepBy": "23:45",
+      "windDownMinutes": 90,
+      "notes": "No screens tonight if possible, my eyes are tired."
+    }
+  }
+]

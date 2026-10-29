@@ -1,0 +1,16 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.vercel/
+*.log
+.DS_Store
+# Recorded Qloo responses are a private cache. Qloo asks that its response
+# data is never stored in a public repository.
+data/*.local.json
+*.local.txt
+# Any other local-only output (snapshots, smoke runs).
+*.local.json
+*.local.md
+# Benchmark output stays local.
+bench/

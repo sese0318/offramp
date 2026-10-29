@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Offramp, your taste on sleep's side</title>
+  <meta name="description" content="A bedtime agent that uses your cultural taste (Qloo) and NVIDIA Nemotron on Nebius Token Factory to walk you from the feed to sleep." />
+  <meta name="theme-color" content="#0b1020" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M21 4a11 11 0 1 0 7 19.5A12 12 0 0 1 21 4z" fill="#f2c38b"/><path d="M3 27c6-1 10-4 13-8s7-7 13-8" stroke="#9fb7ff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <span>Offramp</span>
+      </div>
+      <div class="pills" id="pills" aria-label="Service status"></div>
+    </header>
+
+    <section class="hero">
+      <h1>Your taste, on sleep’s side.</h1>
+      <p>Feeds know exactly what you love, and that is why they keep you up. Offramp uses the same kind of knowledge to walk you down. It takes what you love from the Qloo taste graph, puts it in a calming order with NVIDIA Nemotron, and gives the night an ending.</p>
+      <div>
+        <p class="hint">Try an example night, or fill in your own below.</p>
+        <div class="personas" id="personas"></div>
+      </div>
+    </section>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="view-tonight" id="tab-tonight">Tonight</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="view-mornings" id="tab-mornings">Mornings</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="view-how" id="tab-how">How it works</button>
+    </nav>
+
+    <section class="view" id="view-tonight" role="tabpanel" aria-labelledby="tab-tonight">
+      <div class="grid">
+        <form class="panel" id="form" autocomplete="off">
+          <h2>Tell Offramp about your night</h2>
+          <label class="field">
+            <span>Things you love (shows, films, music, podcasts, books, games)</span>
+            <div class="chips" data-chips="favorites"><input type="text" aria-label="Add something you love" placeholder="Type and press Enter" /></div>
+          </label>
+          <label class="field">
+            <span>What keeps you up</span>
+            <div class="chips" data-chips="traps"><input type="text" aria-label="Add what keeps you up" placeholder="A show, a game, or a habit like TikTok" /></div>
+          </label>
+          <div class="row">
+            <label class="field"><span>Asleep by</span><input type="time" id="sleepBy" value="00:30" required /></label>
+            <label class="field"><span>Wind-down window</span>
+              <select id="windDown"><option value="60">60 minutes</option><option value="75">75 minutes</option><option value="90" selected>90 minutes</option><option value="120">120 minutes</option></select>
+            </label>
+          </div>
+          <label class="field"><span>Anything else about tonight</span>
+            <textarea id="notes" maxlength="500" placeholder="I share a room. I need some sound to fall asleep. My eyes are tired."></textarea>
+          </label>
+          <label class="check"><input type="checkbox" id="screenOk" checked /> A last screen is OK tonight</label>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn primary" id="run" type="submit">Build my offramp</button>
+            <span class="hint" id="runHint"></span>
+          </div>
+        </form>
+
+        <div class="panel">
+          <h2>Agent at work</h2>
+          <ol class="trace" id="trace" aria-live="polite"><li class="empty">Each Qloo call, each Nemotron call and each check shows up here as it happens.</li></ol>
+          <div class="usage" id="usage"></div>
+        </div>
+      </div>
+      <div id="result" class="result" hidden></div>
+    </section>
+
+    <section class="view" id="view-mornings" role="tabpanel" aria-labelledby="tab-mornings" hidden>
+      <div class="grid">
+        <form class="panel" id="logForm">
+          <h2>How did last night go?</h2>
+          <div class="row">
+            <label class="field"><span>Night of</span><input type="date" id="logDate" required /></label>
+            <label class="field"><span>Target</span><input type="time" id="logTarget" value="00:30" /></label>
+          </div>
+          <label class="field"><span>Fell asleep</span>
+            <select id="logLate"><option value="0">About on time</option><option value="15">About 15 minutes late</option><option value="30">About 30 minutes late</option><option value="60">About an hour late</option><option value="120">Two hours or more late</option></select>
+          </label>
+          <fieldset class="field" style="border:0;padding:0;margin:0 0 14px"><legend class="hint" style="margin-bottom:6px">Steps you actually did</legend>
+            <label class="check"><input type="checkbox" value="screen" name="followed" /> Last screen</label>
+            <label class="check"><input type="checkbox" value="audio" name="followed" /> Audio</label>
+            <label class="check"><input type="checkbox" value="music" name="followed" /> Music in bed</label>
+            <label class="check"><input type="checkbox" value="ifawake" name="followed" /> Got up when awake</label>
+          </fieldset>
+          <label class="field"><span>What pulled you back, if anything</span><input type="text" id="logPulled" maxlength="160" placeholder="One more episode" /></label>
+          <label class="field"><span>Felt rested (1 to 5)</span><input type="range" id="logRested" min="1" max="5" value="3" /></label>
+          <div class="actions">
+            <button class="btn primary" type="submit">Save this morning</button>
+            <button class="btn" type="button" id="sampleWeek">Load a sample week</button>
+          </div>
+          <p class="hint">Your log stays in this browser. It is sent to the model only when you ask for a reflection.</p>
+        </form>
+        <div class="panel">
+          <h2>Your week</h2>
+          <ul class="logs" id="logs"></ul>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn" id="reflectBtn" type="button">Reflect on my week</button>
+            <button class="btn" id="clearLogs" type="button">Clear log</button>
+          </div>
+          <div id="reflection" class="reflection"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-how" role="tabpanel" aria-labelledby="tab-how" hidden>
+      <div class="how">
+        <div class="panel">
+          <h2>One night, one agent, three Nemotron models</h2>
+          <svg viewBox="0 0 900 300" role="img" aria-label="Pipeline diagram">
+            <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6f7895"/></marker></defs>
+            <g font-family="system-ui, sans-serif" font-size="14" fill="#e7e9f2">
+              <rect x="10" y="40" width="160" height="70" rx="12" fill="#1a2440" stroke="#8fd3b4"/>
+              <text x="90" y="70" text-anchor="middle" font-weight="600">Intake</text><text x="90" y="92" text-anchor="middle" fill="#a3abc4" font-size="12">Nemotron 3.5 Lightning</text>
+              <rect x="230" y="40" width="200" height="70" rx="12" fill="#1a2440" stroke="#8fd3b4"/>
+              <text x="330" y="70" text-anchor="middle" font-weight="600">Planner agent</text><text x="330" y="92" text-anchor="middle" fill="#a3abc4" font-size="12">Nemotron 3 Super, tool calls</text>
+              <rect x="230" y="180" width="200" height="90" rx="12" fill="#1a2440" stroke="#9fb7ff"/>
+              <text x="330" y="208" text-anchor="middle" font-weight="600">Qloo taste graph</text><text x="330" y="230" text-anchor="middle" fill="#a3abc4" font-size="12">search, tags, insights</text><text x="330" y="250" text-anchor="middle" fill="#a3abc4" font-size="12">with explainability</text>
+              <rect x="490" y="180" width="170" height="90" rx="12" fill="#1a2440" stroke="#8fd3b4"/>
+              <text x="575" y="212" text-anchor="middle" font-weight="600">Arousal rater</text><text x="575" y="234" text-anchor="middle" fill="#a3abc4" font-size="12">Nemotron 3.5 Lightning</text>
+              <rect x="490" y="40" width="170" height="70" rx="12" fill="#1a2440" stroke="#f2c38b"/>
+              <text x="575" y="70" text-anchor="middle" font-weight="600">Validator</text><text x="575" y="92" text-anchor="middle" fill="#a3abc4" font-size="12">only Qloo titles pass</text>
+              <rect x="720" y="40" width="170" height="70" rx="12" fill="#1a2440" stroke="#f2c38b"/>
+              <text x="805" y="70" text-anchor="middle" font-weight="600">Tonight’s plan</text><text x="805" y="92" text-anchor="middle" fill="#a3abc4" font-size="12">calmest last</text>
+              <rect x="720" y="180" width="170" height="90" rx="12" fill="#1a2440" stroke="#8fd3b4"/>
+              <text x="805" y="212" text-anchor="middle" font-weight="600">Weekly reflection</text><text x="805" y="234" text-anchor="middle" fill="#a3abc4" font-size="12">Nemotron 3 Ultra</text><text x="805" y="254" text-anchor="middle" fill="#a3abc4" font-size="12">from your morning log</text>
+            </g>
+            <g stroke="#6f7895" stroke-width="2" fill="none" marker-end="url(#a)">
+              <path d="M170 75H226"/><path d="M300 110V176"/><path d="M360 176V114"/><path d="M430 200C460 200 462 225 486 225"/><path d="M430 75H486"/><path d="M660 75H716"/><path d="M805 176V114"/><path d="M575 114V176" stroke-dasharray="4 4"/>
+            </g>
+            <text x="370" y="150" font-family="system-ui" font-size="11" fill="#6f7895">tool results</text>
+            <text x="590" y="150" font-family="system-ui" font-size="11" fill="#6f7895">rejected drafts go back</text>
+          </svg>
+          <p class="hint">Every arrow is visible in the Agent at work panel, with the model id, the Qloo endpoint, latency and token count.</p>
+        </div>
+        <div class="grid">
+          <div class="panel">
+            <h2>Why taste, why order</h2>
+            <p>Generic sleep advice says read a book or listen to calm music. Which book, which music? Advice that is not yours is easy to ignore, and the feed is never generic. Offramp keeps the part of the feed that works (it knows you) and drops the part that hurts (it never ends, and it gets more exciting).</p>
+            <ul class="refs">
+              <li>Binge viewing was linked to poorer sleep, more fatigue and more insomnia symptoms in 423 young adults, and cognitive pre-sleep arousal fully mediated the link. Exelmans and Van den Bulck, J Clin Sleep Med, 2017. <a href="https://doi.org/10.5664/jcsm.6704">doi 10.5664/jcsm.6704</a></li>
+              <li>Bedtime procrastination, going to bed later than intended with nothing external stopping you, is linked to insufficient sleep. Kroese et al., Front Psychol, 2014. <a href="https://doi.org/10.3389/fpsyg.2014.00611">doi 10.3389/fpsyg.2014.00611</a></li>
+              <li>The if-you-are-still-awake step follows stimulus control, a standard part of CBT-I.</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h2>Private by design</h2>
+            <p>The server keeps nothing. The agent state travels with each request and is signed so it cannot be edited in the browser. Your morning log lives only in this browser’s storage and is sent to the model only when you press Reflect.</p>
+            <p>Every step needs an entity id from a Qloo response in the same run, and the step text is scanned for titles Qloo did not return. A draft that fails goes back to the planner with the reasons. When a Tavily key is set, one more step searches the web for a single calm episode of the first show or podcast, and keeps the pick only if its title appears in the search results.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Offramp is a wellness tool, not medical care. If trouble sleeping lasts for months, talk to a clinician about cognitive behavioral therapy for insomnia (CBT-I).</p>
+      <p>In the US, call or text 988 any time to reach the 988 Suicide and Crisis Lifeline.</p>
+      <p>Taste data from Qloo. Models are NVIDIA Nemotron served on Nebius Token Factory. Open source under the MIT license.</p>
+    </footer>
+  </div>
+  <script src="app.js" type="module"></script>
+</body>
+</html>
