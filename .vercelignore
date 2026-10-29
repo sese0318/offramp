@@ -1,0 +1,5 @@
+# Never upload local secrets or local-only output to Vercel.
+.env
+.env.*
+*.local.*
+bench/

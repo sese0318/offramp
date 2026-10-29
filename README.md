@@ -4,13 +4,35 @@
 
 Feeds know exactly what you love, and that is why they keep you up. Offramp uses the same kind of knowledge to walk you down. It takes what you love from the Qloo taste graph, puts it in a calming order with NVIDIA Nemotron models on Nebius Token Factory, and gives the night an ending.
 
-Live demo [DEMO_URL] . Video [VIDEO_URL] . Built for the Qloo Agentic Hackathon and the Nebius x NVIDIA Global AI Hackathon (Best Apps and Agents track).
+Live demo https://offramp-green.vercel.app . Video [VIDEO_URL] . Built for the Qloo Agentic Hackathon and the Nebius x NVIDIA Global AI Hackathon (Best Apps and Agents track).
 
 ![Offramp tonight view](docs/screenshot.png)
 
-*Screenshot from offline mode (mock model, offline sample catalog). The badges in the top right say which mode is running. Replace it with a live run using `npm run shot`.*
+## Measured
 
-<!-- MEASURED. Paste the two tables printed by `npm run bench` (live keys) here, under a heading "Measured on live Token Factory and Qloo". Use only numbers the script printed. If you did not run it, leave this comment as it is. -->
+Measured 2026-10-29 (22:38 UTC) with `npm run bench -- --agreement`, 30 runs (3 example nights × 10). Nemotron live, Qloo sample data (no Qloo key yet), Tavily live.
+
+| Measure | Value |
+| --- | --- |
+| Plans produced | 30 |
+| First draft accepted by the validator | 87% |
+| Drafts the validator sent back | 4 |
+| Made-up titles or ids caught | 4 |
+| Plans finished by the safety net | 0% |
+| Planner turns with native tool calls | 100% |
+| Planner turns on the JSON tool protocol | 0% |
+| Arousal ratings made by the model | 78% |
+| Calls cut off at max_tokens | 0 |
+| Tool calls deferred to stay in the time limit | 0 |
+| Median seconds per plan | 26.6 |
+| Cost per plan, USD | 0.01376 |
+
+| Tier | Model | Calls per plan | Median ms per call | Tokens per plan | Reasoning tokens per plan |
+| --- | --- | --- | --- | --- | --- |
+| fast | nvidia/Nemotron-3_5-Lightning | 3 | 863 | 2261 | 23 |
+| planner | nvidia/nemotron-3-super-120b-a12b | 10.6 | 1679 | 38162 | 2392 |
+
+Arousal agreement on 11 candidates, fast vs deep. Mean difference 0.64 points, within 1 point 100%, Spearman 0.97. Fast took 3.7 s, deep took 11.2 s.
 
 ## The problem
 
